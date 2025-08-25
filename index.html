@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎵 Beatify - Your Ultimate Music Experience</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+</head>
+<body>
+  <!-- Animated Background Canvas -->
+  <canvas id="visualizer"></canvas>
+  
+  <!-- Main App Container -->
+  <div class="app-container">
+    <!-- Enhanced Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>🎵 Beatify</h2>
+        <p class="sidebar-subtitle">Your Ultimate Music Experience</p>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-target="overview">
+          <span class="nav-icon"></span>
+          <span class="nav-text">Home</span>
+        </button>
+        <button class="nav-btn" data-target="search">
+          <span class="nav-icon"></span>
+          <span class="nav-text">Search</span>
+        </button>
+        <button class="nav-btn" data-target="library">
+          <span class="nav-icon"></span>
+          <span class="nav-text">Library</span>
+        </button>
+        <button class="nav-btn" data-target="categories">
+          <span class="nav-icon"></span>
+          <span class="nav-text">Categories</span>
+        </button>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <p class="version">Beatify v2.0</p>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Home Section -->
+      <section id="overview" class="main-section active">
+        <div class="section-header">
+          <h1>🔥 Trending Tracks</h1>
+          <p class="section-description">Discover the hottest music right now</p>
+        </div>
+        <ul id="overviewList" class="song-grid"></ul>
+      </section>
+
+      <!-- Search Section -->
+      <section id="search" class="main-section">
+        <div class="section-header">
+          <h1>🔍 Search Songs</h1>
+          <p class="section-description">Find your favorite tracks instantly</p>
+        </div>
+        <div class="controls">
+          <div class="search-container">
+            <input type="text" id="searchBar" placeholder="Search by title, artist, or category...">
+            <div class="search-icon">🔍</div>
+          </div>
+        </div>
+        <ul id="searchResults" class="song-grid"></ul>
+      </section>
+
+      <!-- Library Section -->
+      <section id="library" class="main-section">
+        <div class="section-header">
+          <h1>🎧 Your Library</h1>
+          <p class="section-description">Your personal music collection and playlists</p>
+        </div>
+        
+        <div class="library-tabs">
+          <button class="tab-btn active" data-tab="liked">❤️ Liked Songs</button>
+          <button class="tab-btn" data-tab="playlists">📚 Playlists</button>
+        </div>
+        
+        <!-- Liked Songs Tab -->
+        <div id="liked-tab" class="tab-content active">
+          <div class="liked-header">
+            <h3>❤️ Liked Songs</h3>
+            <p class="liked-count">0 songs</p>
+          </div>
+          <ul id="likedList" class="song-grid"></ul>
+        </div>
+        
+        <!-- Playlists Tab -->
+        <div id="playlists-tab" class="tab-content">
+          <div class="playlists-header">
+            <div class="playlists-info">
+              <h3>📚 Your Playlists</h3>
+              <p class="playlists-count">0 playlists</p>
+            </div>
+            <button class="create-playlist-btn" onclick="createNewPlaylist()">
+              <span>➕</span>
+              <span>Create Playlist</span>
+            </button>
+          </div>
+          
+          <div id="playlistsContainer" class="playlists-grid">
+            <!-- Playlists will be loaded here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Categories Section -->
+      <section id="categories" class="main-section">
+        <div class="section-header">
+          <h1>📚 Categories</h1>
+          <p class="section-description">Browse music by genre and mood</p>
+        </div>
+        <div class="controls">
+          <div class="category-container">
+            <select id="categorySelect">
+              <option value="all">All Categories</option>
+              <option value="hiphop"> Hip-Hop </option>
+              <option value="desi">Desi</option>
+              <option value="lofi"> Lo-Fi </option>
+              <option value="romantic"> Romantic</option>
+              
+            </select>
+          </div>
+        </div>
+        <ul id="categoryList" class="song-grid"></ul>
+      </section>
+    </main>
+  </div>
+
+  <!-- Enhanced Floating Player -->
+  <div class="player floating-player">
+    <div class="left">
+      <div class="cover-container">
+        <img id="coverImage" class="cover" src="" alt="Album Cover">
+        <div class="cover-overlay">
+          <div class="vinyl-effect"></div>
+        </div>
+      </div>
+      <div class="song-details">
+        <h3 id="nowTitle">Not Playing</h3>
+        <p id="nowCategory">---</p>
+        <div class="song-progress-mini">
+          <div class="mini-progress-bar">
+            <div class="mini-progress-fill"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="center player-controls">
+      <button onclick="prevSong()" class="control-btn" title="Previous Song">⏮</button>
+      <button onclick="toggleShuffle()" id="shuffleBtn" class="control-btn" title="Shuffle">🔀</button>
+      <button onclick="togglePlayPause()" id="playPauseBtn" class="control-btn main-control" title="Play/Pause">▶</button>
+      <button onclick="toggleRepeat()" id="repeatBtn" class="control-btn" title="Repeat">🔁</button>
+      <button onclick="nextSong()" class="control-btn" title="Next Song">⏭</button>
+    </div>
+
+    <div class="right">
+      <div class="seek-bar">
+        <span id="currentTime">0:00</span>
+        <div class="progress-container">
+          <input type="range" id="progressBar" value="0" step="1" min="0" max="100">
+          <div class="progress-track">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+        <span id="duration">0:00</span>
+      </div>
+
+      <div class="volume-bar">
+        <span id="volumeLabel">🔊</span>
+        <div class="volume-container">
+          <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1">
+          <div class="volume-track">
+            <div class="volume-fill"></div>
+          </div>
+        </div>
+        <span id="volumePercent">100%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Element -->
+  <audio id="audioPlayer" src=""></audio>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+      <div class="spinner-ring"></div>
+      <div class="spinner-text">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>
