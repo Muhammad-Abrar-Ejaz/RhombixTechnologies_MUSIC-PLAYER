@@ -1,4 +1,4 @@
-# 🎵 Enhanced Modern Music Player
+# 🎵 Music Player
 
 A beautifully designed, feature-rich music player with stunning animations, modern UI, and enhanced functionality.
 
@@ -173,3 +173,4 @@ This project is open source and available under the MIT License.
 ---
 
 **Enjoy your enhanced music experience! 🎵✨**
+
